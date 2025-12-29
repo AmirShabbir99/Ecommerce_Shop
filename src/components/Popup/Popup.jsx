@@ -1,48 +1,93 @@
-import React from "react";
+import emailjs from "@emailjs/browser";
 import { IoCloseOutline } from "react-icons/io5";
+import { useState } from "react";
 
 const Popup = ({ orderPopup, setOrderPopup }) => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    emailjs
+      .sendForm(
+        "service_2fuuh5q",
+        "template_0ar35iq",
+        e.target,
+        "7nJVgsVNuINo2c3yt"
+      )
+      .then(
+        (result) => {
+          console.log("Email successfully sent!", result.text);
+          alert("Order placed successfully ✅");
+          e.target.reset();
+          setOrderPopup(false);
+        },
+        (error) => {
+          console.log("Failed to send email:", error.text);
+          alert("Failed to send order ❌");
+        }
+      );
+  };
+
   return (
     <>
       {orderPopup && (
         <div className="popup">
           <div className="h-screen w-screen fixed top-0 left-0 bg-black/50 z-50 backdrop-blur-sm">
             <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 shadow-md bg-white dark:bg-gray-900 rounded-md duration-200 w-[300px]">
-              {/* header */}
+
+              {/* Header */}
               <div className="flex items-center justify-between">
-                <div>
-                  <h1>Order Now</h1>
-                </div>
-                <div>
-                  <IoCloseOutline
-                    className="text-2xl cursor-pointer "
-                    onClick={() => setOrderPopup(false)}
-                  />
-                </div>
+                <h1 className="font-semibold">Order Now</h1>
+                <IoCloseOutline
+                  className="text-2xl cursor-pointer"
+                  onClick={() => setOrderPopup(false)}
+                />
               </div>
-              {/* form section */}
-              <div className="mt-4">
+
+              {/* Form */}
+              <form onSubmit={handleSubmit} className="mt-4">
                 <input
                   type="text"
+                  name="user_name"
                   placeholder="Name"
-                  className=" w-full rounded-full border border-gray-300 dark:border-gray-500 dark:bg-gray-800 px-2 py-1 mb-4"
+                  required
+                  className="w-full rounded-full border border-gray-300 dark:border-gray-500 dark:bg-gray-800 px-3 py-2 mb-3"
                 />
+
                 <input
                   type="email"
+                  name="user_email"
                   placeholder="Email"
-                  className=" w-full rounded-full border border-gray-300 dark:border-gray-500 dark:bg-gray-800 px-2 py-1 mb-4"
+                  required
+                  className="w-full rounded-full border border-gray-300 dark:border-gray-500 dark:bg-gray-800 px-3 py-2 mb-3"
                 />
+
                 <input
                   type="text"
+                  name="user_address"
                   placeholder="Address"
-                  className=" w-full rounded-full border border-gray-300 dark:border-gray-500 dark:bg-gray-800 px-2 py-1 mb-4"
+                  required
+                  className="w-full rounded-full border border-gray-300 dark:border-gray-500 dark:bg-gray-800 px-3 py-2 mb-3"
                 />
+
+                {/* New textbox for order items */}
+                <input
+                  type="text"
+                  name="user_order"
+                  placeholder="Your Order"
+                  required
+                  className="w-full rounded-full border border-gray-300 dark:border-gray-500 dark:bg-gray-800 px-3 py-2 mb-4"
+                />
+
                 <div className="flex justify-center">
-                  <button className="bg-gradient-to-r from-primary to-secondary hover:scale-105 duration-200 text-white py-1 px-4 rounded-full ">
+                  <button
+                    type="submit"
+                    className="bg-gradient-to-r from-primary to-secondary hover:scale-105 duration-200 text-white py-1 px-5 rounded-full"
+                  >
                     Order Now
                   </button>
                 </div>
-              </div>
+              </form>
+
             </div>
           </div>
         </div>
